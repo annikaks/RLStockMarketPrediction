@@ -2,11 +2,14 @@ import yfinance as yf
 import pandas as pd
 import csv
 import os
-from config import TICKERS, START_DATE, END_DATE
+from config import TICKERS, START_DATE, END_DATE, LOGGING, DATASET_CREATION_LOGGING
 
 saved_files = []
+log = LOGGING or DATASET_CREATION_LOGGING
 
+if log: print("dataset_creation.py")
 for ticker_symbol in TICKERS:
+    
     # ticker_data = yf.Ticker(ticker_symbol)
     try:
         data = yf.download(ticker_symbol, start=START_DATE, end=END_DATE)
@@ -22,14 +25,13 @@ for ticker_symbol in TICKERS:
                 writer.writerow(header) 
                 writer.writerows(data_to_write.values)
 
-
-            print(f"saving {ticker_symbol} data to {out_path}: {len(data)} data loaded")
+            if log: print(f"        saving {ticker_symbol} data to {out_path}: {len(data)} data loaded")
             saved_files.append(out_path)
-        
-    except Exception as e:
-        print(f"{ticker_symbol} not available")
-        print(f"    {e}")
 
+    except Exception as e:
+        if log: print(f"        {ticker_symbol} not available")
+        if log: print(f"            {e}")
+if log: print("!!! COMPLETED")
 # write data path files to dynamic .py file (saves file names)
 with open("valid_data_paths.py", "w") as f:
     f.write("# AUTO-GENERATED. DO NOT EDIT.\n")
