@@ -8,6 +8,10 @@ END_DATE = "2025-01-01"
 DATA_FILES = DATA_FILES
 NUM_DISCRETE_CATEGORIES = 5
 
+# MDP SETUP
+# trading_mdp.py
+WINDOW_LENGTH = 5
+
 
 # LOGGING config
 # note that setting logging to true will OVERRIDE all other logging configs
