@@ -51,7 +51,7 @@ class TradingMDP:
         - Position update: h_{t+1} = clip(h_t + a, -1, +1)
         - Time moves forward: t -> t+1
         """
-        assert a in (-1, 1), "      you must -1 (sell) or +1 (buy)"
+        assert a in (-1, 1, 0), "      you must -1 (sell) or 0 (hold) or +1 (buy)"
 
         if self.is_terminal(s):
             return s, 0.0, True
