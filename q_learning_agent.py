@@ -7,7 +7,7 @@ import random
 import os
 import json
 
-from config import HISTORY_WINDOW_LENGTH, NUM_DISCRETE_CATEGORIES, ACTIONS, ALPHA, GAMMA, EPSILON, DATA_FILES, Q_LEARNING_AGENT_LOGGING, LOGGING, TRAIN_TEST_SPLIT_DATE
+from config import HISTORY_WINDOW_LENGTH, NUM_DISCRETE_CATEGORIES, ACTIONS, ALPHA, GAMMA, EPSILON, DATA_FILES, Q_LEARNING_AGENT_LOGGING, LOGGING, TRAIN_TEST_SPLIT_DATE, NUM_EPISODES, EPSILON_DECAY
 from trading_mdp import TradingState, TradingMDP
 import dataset_creation, dataset_preparation
 
@@ -150,7 +150,7 @@ if __name__ == "__main__":
         agent = QLearningAgent(mdp_train, alpha=ALPHA, gamma=GAMMA, epsilon=EPSILON)
 
         if log: print("     ---- q-learning training ----")
-        training_rewards = agent.train(num_episodes=500, epsilon_decay=0.999)
+        training_rewards = agent.train(num_episodes=NUM_EPISODES, epsilon_decay=EPSILON_DECAY)
         
         if log: 
             print("     ---- training complete ----")
