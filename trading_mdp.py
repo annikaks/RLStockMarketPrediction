@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Tuple
 import numpy as np
-from config import HISTORY_WINDOW_LENGTH
+from config import HISTORY_WINDOW_LENGTH, ACTIONS
 
 
 @dataclass
@@ -30,6 +30,7 @@ class TradingMDP:
         self.cats = cats
         self.T = len(prices)
         self.k = k
+        self.actions = ACTIONS
 
     def initial_state(self) -> TradingState:
         """
@@ -72,7 +73,6 @@ class TradingMDP:
     def encode_state(self, s: TradingState) -> Tuple[int, ...]:
         """
         TradingState but discrete
-
         Key = (cats[t-k+1], ..., cats[t], h_t)
         """
         t, h = s.t, s.h
