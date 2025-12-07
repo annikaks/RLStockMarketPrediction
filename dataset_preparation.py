@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import json
 from config import DATA_FILES, LOGGING, DATASET_PREPARATION_LOGGING, NUM_DISCRETE_CATEGORIES
 
 log = LOGGING or DATASET_PREPARATION_LOGGING
@@ -25,8 +26,10 @@ def discretize_returns_qcut(returns: np.ndarray, n_bins: int = 5):
     cats, bins = pd.qcut(s, q=n_bins, labels=False, retbins=True, duplicates="drop")
     return cats.to_numpy(), bins
 
-if __name__ == "__main__":
+def main():
     if log: print(f"dataset_preparation.py:")
+    discretization_map = {}
+
     for csv_path in DATA_FILES:
         prices = load_daily_data(csv_path)
         price_returns = compute_returns(prices)
@@ -35,4 +38,15 @@ if __name__ == "__main__":
         if log: print(f"     Processing {csv_path}")
         if log: print("     Bin edges:", bins)
         if log: print(f"     Category counts:{np.bincount(cats)}\n")
-    if log: print("!!! COMPLETED")
+        discretization_map[csv_path] = {
+            "cats": cats.tolist(),
+            "bins": bins.tolist(),
+        }
+
+    out_path = "data/discretized_returns.json"
+    with open(out_path, "w") as f:
+        json.dump(discretization_map, f, indent=2)
+    if log: print("!!! COMPLETED\n")
+
+if __name__ == "__main__":
+    main()

@@ -8,7 +8,6 @@ saved_files = []
 log = LOGGING or DATASET_CREATION_LOGGING
 
 def parse_and_save_data():
-    if log: print("dataset_creation.py")
     for ticker_symbol in TICKERS:
         # ticker_data = yf.Ticker(ticker_symbol)
         try:
@@ -40,7 +39,11 @@ def parse_and_save_data():
             f.write(f"    '{fp}',\n")
         f.write("]\n")
 
-if __name__ == "__main__":
+def main():
     if log: print(f"dataset_creation.py:")
     parse_and_save_data()
-    if log: print("!!! COMPLETED")
+    if log: print("!!! COMPLETED\n")
+
+if __name__ == "__main__":
+    main()
+    
