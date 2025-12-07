@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Tuple
 import numpy as np
-from config import WINDOW_LENGTH
+from config import HISTORY_WINDOW_LENGTH
 
 
 @dataclass
@@ -24,7 +24,7 @@ class TradingMDP:
     State is:
       (cats[t-k+1], ..., cats[t], h_t)
     """
-    def __init__(self, prices: np.ndarray, cats: np.ndarray, k: int = WINDOW_LENGTH):
+    def __init__(self, prices: np.ndarray, cats: np.ndarray, k: int = HISTORY_WINDOW_LENGTH):
         assert len(prices) == len(cats), "      prices and cats must be same length, rerun dataset_preparation"
         self.prices = prices
         self.cats = cats
