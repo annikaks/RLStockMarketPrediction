@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import json
+import os
 from config import DATA_FILES, LOGGING, DATASET_PREPARATION_LOGGING, NUM_DISCRETE_CATEGORIES
 
 log = LOGGING or DATASET_PREPARATION_LOGGING
@@ -44,6 +45,8 @@ def main():
         }
 
     out_path = "data/discretized_returns.json"
+    if os.path.exists(out_path):
+        os.remove(out_path)
     with open(out_path, "w") as f:
         json.dump(discretization_map, f, indent=2)
     if log: print("!!! COMPLETED\n")
