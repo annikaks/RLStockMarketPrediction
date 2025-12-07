@@ -1,5 +1,4 @@
 # AUTO-GENERATED. DO NOT EDIT.
-TRAIN_FILES = [
-    'data/NDAQ_train.csv',
-    'data/VOO_train.csv',
+DATA_FILES = [
+    'data/NDAQ_daily.csv',
 ]

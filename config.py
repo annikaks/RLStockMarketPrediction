@@ -1,14 +1,13 @@
-from valid_data_paths import TRAIN_FILES
-from valid_test_paths import TEST_FILES
+from valid_data_paths import DATA_FILES
 
 # DATA configs
 # dataset_creation.py, dataset_preparation.py
-TICKERS = ["NDAQ", "VOO"]
+TICKERS = ["NDAQ"]
 START_DATE = "2020-01-01"
 END_DATE = "2025-12-03"
 TRAIN_TEST_SPLIT_DATE = "2025-01-01"
 
-DATA_FILES = TRAIN_FILES
+DATA_FILES = DATA_FILES
 NUM_DISCRETE_CATEGORIES = 5
 
 # MDP SETUP

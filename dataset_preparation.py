@@ -9,7 +9,7 @@ def load_daily_data(csv_path: str) -> pd.Series:
     df = pd.read_csv(csv_path)
     if "Date" in df.columns:
         df = df.sort_values("Date")
-    prices = df["Cost"].astype(float).reset_index(drop=True) 
+    prices = df["Close"].astype(float).reset_index(drop=True) 
     return prices
 
 # compute daily percentage change
