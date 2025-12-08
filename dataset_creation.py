@@ -32,7 +32,7 @@ def parse_and_save_data():
             if log: print(f"            {e}")
 
     # write data path files to dynamic .py file (saves file names)
-    with open("valid_data_paths.py", "w") as f:
+    with open("data/valid_data_paths.py", "w") as f:
         f.write("# AUTO-GENERATED. DO NOT EDIT.\n")
         f.write("DATA_FILES = [\n")
         for fp in saved_files:

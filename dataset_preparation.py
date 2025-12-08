@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 import json
 import os
-from config import DATA_FILES, LOGGING, DATASET_PREPARATION_LOGGING, NUM_DISCRETE_CATEGORIES
+from data.valid_data_paths import DATA_FILES
+from config import LOGGING, DATASET_PREPARATION_LOGGING, NUM_DISCRETE_CATEGORIES
 
 log = LOGGING or DATASET_PREPARATION_LOGGING
 # return array of prices from csv
