@@ -70,7 +70,7 @@ class QLearningAgent:
 
             total_rewards.append(episode_reward)
             
-            self.epsilon = max(0.01, self.epsilon * epsilon_decay) # Ensure epsilon doesn't hit zero
+            self.epsilon = max(0.001, self.epsilon * epsilon_decay) # Ensure epsilon doesn't hit zero
             
             if (episode + 1) % 100 == 0:
                 print(f"     Episode {episode + 1}/{num_episodes}: Total Reward = ${episode_reward:.2f}, Epsilon = {self.epsilon:.4f}")
@@ -94,20 +94,49 @@ def evaluate_policy(agent, mdp):
     total_reward = 0.0
     done = False
 
+    step_count = 0
     while not done:
         action = agent.get_best_action(s_encoded)
+        # print(f"t={s.t}, price={mdp.prices[s.t]:.2f}, shares={s.shares}, cash={s.cash:.2f}, action={action}")
+
         s_next, reward, done = mdp.step(s, action) 
         total_reward += reward
         s = s_next
         s_encoded = mdp.encode_state(s)
+        step_count += 1
 
-    agent.epsilon = old_eps
-    return total_reward
+    last_price = mdp.prices[s.t]
+    final_value = s.cash + s.shares * last_price
+
+    return total_reward, final_value
+    # agent.epsilon = old_eps
+    # return total_reward
 
 
 def buy_and_hold(prices: np.ndarray) -> float:
     # total if we buy day 1 and hold
     return float(prices[-1] - prices[0])
+
+def buy_and_hold_portfolio(mdp) -> float:
+    """
+    Baseline: from the initial state, buy 1 share if possible
+    at the first tradable day and then hold until the end.
+    Returns final portfolio value in dollars.
+    """
+    s0 = mdp.initial_state()
+    price0 = mdp.prices[s0.t]
+
+    cash = s0.cash
+    shares = s0.shares  # should be 0 initially
+
+    # Buy 1 share if we can afford it
+    if shares == 0 and cash >= price0:
+        shares = 1
+        cash -= price0
+
+    last_price = mdp.prices[-1]
+    final_value = cash + shares * last_price
+    return final_value
 
 
 if __name__ == "__main__":
@@ -155,14 +184,22 @@ if __name__ == "__main__":
         if log: 
             print("     ---- training complete ----")
             print(f"     states learned: {len(agent.Q)}")
-            print(f"     reward in final episode: ${training_rewards[-1]:.2f}")
+            # print(f"     reward in final episode: ${training_rewards[-1]:.2f}")
         
 
-        test_reward = evaluate_policy(agent, mdp_test)
-        bh_reward   = buy_and_hold(prices_test)
+        # test_reward = evaluate_policy(agent, mdp_test)
+        bh_final_value   = buy_and_hold(prices_test)
+        test_total_reward, test_final_value = evaluate_policy(agent, mdp_test)
+        # bh_final_value = buy_and_hold_portfolio(mdp_test)
 
-        print(f"     Q-learning test reward: ${test_reward:.2f}")
-        print(f"     Buy & hold  test reward: ${bh_reward:.2f}")
+        # print(f"     Q-learning test reward: ${test_reward:.2f}")
+        # print(f"     Buy & hold  test reward: ${bh_reward:.2f}")
+        # print(f"     Q-learning test total reward: {test_total_reward:.2f}")
+        # print(f"     Q-learning final portfolio:   ${test_final_value:.2f}")
+        # print(f"     Buy & hold final portfolio:   ${bh_final_value:.2f}")
+        print(f"     Q-learning gain:      ${test_final_value - mdp_test.init_cash:.2f}")
+        print(f"     Buy & hold gain:      ${bh_final_value - mdp_test.init_cash:.2f}")
+
         initial_state = mdp_test.initial_state()
         initial_s_encoded = mdp_test.encode_state(initial_state)
 
